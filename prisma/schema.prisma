@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model ApiKey {
+  id         String    @id @default(cuid())
+  label      String
+  key        String
+  keyMasked  String
+  isDefault  Boolean   @default(false)
+  status     String    @default("unverified") // unverified | active | invalid
+  plan       String?
+  accountName String?
+  lastError  String?
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime?
+}
+
+model RequestLog {
+  id          String   @id @default(cuid())
+  tool        String
+  category    String
+  mode        String   @default("live") // live | demo
+  status      String // ok | not_found | error
+  httpStatus  Int?
+  errorMessage String?
+  records     Int      @default(0)
+  durationMs  Int      @default(0)
+  batchCount  Int      @default(1)
+  keyLabel    String?
+  createdAt   DateTime @default(now())
+}
+
+model SavedSearch {
+  id         String   @id @default(cuid())
+  name       String
+  tool       String
+  paramsJson String
+  createdAt  DateTime @default(now())
+}
+
+model CollectionItem {
+  id          String   @id @default(cuid())
+  itemType    String // person | company
+  fullName    String?
+  title       String?
+  company     String?
+  domain      String?
+  email       String?
+  riskScore   String?
+  phone       String?
+  linkedinUrl String?
+  country     String?
+  score       Float?
+  sourceTool  String
+  dataJson    String
+  createdAt   DateTime @default(now())
+}
