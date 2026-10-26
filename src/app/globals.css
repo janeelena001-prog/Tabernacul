@@ -121,45 +121,34 @@
   }
 }
 
-/* ============ MoltSets Control Center — premium dark chrome ============ */
+/* ====== MoltSets Control Center — simple dark chrome ====== */
 
 html, body {
-  background: #0A0B0E;
+  background: #0B0B0F;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(900px 500px at 85% -10%, rgba(244, 128, 93, 0.06) 0%, transparent 60%),
-    radial-gradient(700px 400px at -10% 110%, rgba(244, 128, 93, 0.04) 0%, transparent 60%);
-}
-
-/* Slim ember scrollbars */
+/* Slim neutral scrollbars */
 .dash-scroll::-webkit-scrollbar,
 .ant-layout-sider::-webkit-scrollbar,
 .ant-table-body::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 .dash-scroll::-webkit-scrollbar-track,
 .ant-layout-sider::-webkit-scrollbar-track,
 .ant-table-body::-webkit-scrollbar-track {
-  background: #0A0B0E;
+  background: transparent;
 }
 .dash-scroll::-webkit-scrollbar-thumb,
 .ant-layout-sider::-webkit-scrollbar-thumb,
 .ant-table-body::-webkit-scrollbar-thumb {
-  background: rgba(244, 128, 93, 0.35);
+  background: #2E2E36;
   border-radius: 3px;
 }
 .dash-scroll::-webkit-scrollbar-thumb:hover,
 .ant-layout-sider::-webkit-scrollbar-thumb:hover,
 .ant-table-body::-webkit-scrollbar-thumb:hover {
-  background: rgba(244, 128, 93, 0.65);
+  background: #3E3E48;
 }
 
 @keyframes pulse {
@@ -167,41 +156,33 @@ body::before {
   50% { opacity: 1; transform: scale(1.04); }
 }
 
-/* Subtle card hover lift */
+/* Quiet card hover — border brighten only */
 .ant-card {
-  transition: border-color 0.2s ease, box-shadow 0.25s ease, transform 0.2s ease;
-}
-.ant-card:hover {
-  border-color: rgba(244, 128, 93, 0.4);
+  transition: border-color 0.18s ease;
 }
 
-/* KPI cards keep their own gradient on hover */
-.ant-card[style*='linear-gradient']:hover {
-  border-color: rgba(244, 128, 93, 0.55);
-  box-shadow: 0 0 22px rgba(244, 128, 93, 0.12);
-}
-
-/* Menu groups tighter */
+/* Menu group titles */
 .ant-menu-item-group-title {
   padding-bottom: 4px !important;
-  color: #64748B !important;
+  color: #6B6B76 !important;
+}
+/* Hide group titles when the sider is collapsed (avoids truncation) */
+.ant-layout-sider .ant-layout-sider-collapsed .ant-menu-item-group-title,
+.ant-layout-sider-collapsed .ant-menu-inline .ant-menu-item-group-title {
+  display: none !important;
 }
 
-/* Table density polish */
+/* Table: no vertical cell dividers, cleaner rows */
 .ant-table-tbody > tr > td {
   border-inline-end: none !important;
 }
 
-/* Make monospace numerals crisp */
-* {
-  font-feature-settings: 'tnum' 1;
-}
-
+/* Monospace numerals for code + data cells */
 pre, code, .mono {
   font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace !important;
 }
 
-/* AntD App message z-index safety */
+/* AntD message z-index safety */
 .ant-message {
   z-index: 1000;
 }

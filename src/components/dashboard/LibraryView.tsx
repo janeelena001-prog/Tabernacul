@@ -47,7 +47,7 @@ export default function LibraryView() {
       />
 
       <Card style={{ borderColor: BRAND.border, background: BRAND.bgCard, marginBottom: 16 }} styles={{ body: { padding: 16 } }}>
-        <Space direction="vertical" size={10} style={{ width: '100%' }}>
+        <Space orientation="vertical" size={10} style={{ width: '100%' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center' }}>
             <Segmented
               value={category}
@@ -92,12 +92,12 @@ export default function LibraryView() {
             <Col xs={24} sm={12} xl={8} key={s.title}>
               <Card
                 hoverable
-                style={{ borderColor: BRAND.border, background: `linear-gradient(160deg, ${BRAND.bgCard} 0%, ${BRAND.bgBase} 100%)`, height: '100%' }}
+                style={{ borderColor: BRAND.border, background: BRAND.bgCard, height: '100%' }}
                 styles={{ body: { padding: 20, display: 'flex', flexDirection: 'column', height: '100%' } }}
                 onClick={() => window.open('https://moltsets.com/library', '_blank')}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                  <Tag color="transparent" style={{ color: CATEGORY_COLORS[s.category], border: `1px dashed ${CATEGORY_COLORS[s.category]}66`, background: `${CATEGORY_COLORS[s.category]}12` }}>
+                  <Tag color="transparent" style={{ color: CATEGORY_COLORS[s.category], border: `1px solid ${CATEGORY_COLORS[s.category]}44`, background: `${CATEGORY_COLORS[s.category]}14` }}>
                     {s.category}
                   </Tag>
                   <span style={{ fontSize: 11, color: DIFFICULTY_COLORS[s.difficulty], fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
@@ -108,7 +108,7 @@ export default function LibraryView() {
                 <Paragraph style={{ color: BRAND.textMuted, fontSize: 12.5, flex: 1, marginBottom: 10 }}>
                   {s.description}
                 </Paragraph>
-                <div style={{ borderTop: `1px dashed ${BRAND.border}`, paddingTop: 10, display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                <div style={{ borderTop: `1px solid ${BRAND.border}`, paddingTop: 10, display: 'flex', gap: 4, flexWrap: 'wrap' }}>
                   {s.platforms.map((p) => (
                     <Tag key={p} style={{ fontSize: 10, borderColor: BRAND.border, color: BRAND.textSecondary }}>{p}</Tag>
                   ))}

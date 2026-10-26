@@ -190,7 +190,7 @@ export default function MonitoringView() {
                       <div style={{
                         height: '100%', borderRadius: 3,
                         width: `${(t.calls / maxToolCalls) * 100}%`,
-                        background: `linear-gradient(90deg, ${BRAND.orange}, ${BRAND.orangeDeep})`,
+                        background: BRAND.orange,
                         transition: 'width 0.5s ease',
                       }} />
                     </div>

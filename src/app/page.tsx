@@ -58,7 +58,7 @@ const MENU_ITEMS = [
 export default function HomePage() {
   const [collapsed, setCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { view, setView, demoMode, setDemoMode, account, refreshTick, bumpRefresh } = useDash();
+  const { view, setView, demoMode, setDemoMode, account, accountMode, refreshTick, bumpRefresh } = useDash();
 
   // start collapsed on small screens
   useEffect(() => {
@@ -76,10 +76,15 @@ export default function HomePage() {
   // Pull account summary once at boot (works in demo mode too)
   useEffect(() => {
     if (!mounted) return;
-    fetchJson<{ ok?: boolean; data?: { results?: Record<string, unknown> } }>('/api/account')
+    fetchJson<{ ok?: boolean; mode?: string; data?: { results?: Record<string, unknown> } }>('/api/account')
       .then((r) => {
-        if (r.data?.results) useDash.getState().setAccount(r.data.results as never);
-        else useDash.getState().setAccount(null);
+        if (r.data?.results) {
+          useDash.getState().setAccount(r.data.results as never);
+          useDash.getState().setAccountMode(r.mode === 'demo' ? 'demo' : 'live');
+        } else {
+          useDash.getState().setAccount(null);
+          useDash.getState().setAccountMode(null);
+        }
       })
       .catch(() => {});
   }, [mounted, refreshTick]);
@@ -92,7 +97,8 @@ export default function HomePage() {
     );
   }
 
-  const connected = (account?.status === 'active');
+  const connected = (account?.status === 'active') && accountMode === 'live';
+  const showDemoData = accountMode === 'demo';
   const plan = String(account?.plan || '');
 
   const content = (() => {
@@ -121,19 +127,19 @@ export default function HomePage() {
             width={224}
             style={{
               borderRight: `1px solid ${BRAND.border}`,
-              background: 'linear-gradient(180deg, #0C0D12 0%, #0A0B0E 100%)',
+              background: BRAND.bgContainer,
               position: 'sticky', top: 0, height: '100vh', overflow: 'auto',
             }}
           >
             <div
               style={{
                 display: 'flex', alignItems: 'center', gap: 10, padding: collapsed ? '18px 14px' : '18px 18px',
-                borderBottom: `1px dashed ${BRAND.border}66`, cursor: 'pointer',
+                borderBottom: `1px solid ${BRAND.border}`, cursor: 'pointer',
               }}
               onClick={() => setView('overview')}
             >
-              <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden>
-                <rect width="32" height="32" rx="6" fill={BRAND.bgBase} stroke={BRAND.orange} strokeOpacity="0.4" />
+              <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden>
+                <rect width="32" height="32" rx="7" fill="rgba(244,128,93,0.12)" />
                 <path d="M8 22V10l8 6 8-6v12" stroke={BRAND.orange} strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               {!collapsed && (
@@ -154,7 +160,7 @@ export default function HomePage() {
               style={{ borderInlineEnd: 'none', paddingTop: 8 }}
             />
 
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 14, borderTop: `1px dashed ${BRAND.border}66` }}>
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 14, borderTop: `1px solid ${BRAND.border}` }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
                 {!collapsed && <Text type="secondary" style={{ fontSize: 11 }}><ExperimentOutlined /> Demo mode</Text>}
                 <Switch
@@ -204,12 +210,12 @@ export default function HomePage() {
                 >
                   <a href="https://developer.moltsets.com" target="_blank" rel="noreferrer" style={{ color: BRAND.textSecondary, marginLeft: 4, fontSize: 12 }}>API Docs</a>
                 </Tag>
-                <Tooltip title={demoMode ? 'Demo mode — synthetic data' : 'Live mode'}>
+                <Tooltip title={demoMode ? 'Demo mode — synthetic data' : showDemoData ? 'Demo data — no valid key yet' : connected ? 'Live data from api.moltsets.com' : 'No active API key'}>
                   <Badge
-                    status={demoMode ? 'warning' : connected ? 'success' : 'error'}
+                    status={demoMode || showDemoData ? 'warning' : connected ? 'success' : 'error'}
                     text={
                       <span style={{ fontSize: 12, color: BRAND.textSecondary }}>
-                        {demoMode ? 'DEMO' : connected ? 'LIVE' : 'NO KEY'}
+                        {demoMode ? 'DEMO' : showDemoData ? 'DEMO DATA' : connected ? 'LIVE' : 'NO KEY'}
                       </span>
                     }
                   />

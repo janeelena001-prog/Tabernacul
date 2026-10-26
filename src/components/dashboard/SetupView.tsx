@@ -12,7 +12,7 @@ import {
 import { BRAND } from '@/lib/theme';
 import { PLAN_TIERS, planName } from '@/lib/plans';
 import { useDash, AccountInfo } from '@/lib/store';
-import { KpiCard, PageHeader, FairUseMeter } from './ui';
+import { MiniStat, PageHeader, FairUseMeter } from './ui';
 
 const { Text } = Typography;
 
@@ -43,7 +43,7 @@ export default function SetupView() {
   const [acctLoading, setAcctLoading] = useState(false);
   const [mode, setMode] = useState<'auto' | 'demo'>('auto');
   const [msgApi, contextHolder] = message.useMessage();
-  const { demoMode, setDemoMode, setKeyStatus, setAccount: setStoreAccount } = useDash();
+  const { demoMode, setDemoMode, setKeyStatus, setAccount: setStoreAccount, setAccountMode } = useDash();
 
   const loadKeys = useCallback(async () => {
     try {
@@ -68,12 +68,15 @@ export default function SetupView() {
         const acct: AccountInfo = aj.data.results;
         setAccount(acct);
         setStoreAccount(acct);
+        setAccountMode('live');
       } else if (aj.mode === 'demo') {
         setAccount(aj.data?.results || null);
         setStoreAccount(aj.data?.results || null);
+        setAccountMode('demo');
       } else {
         setAccount(null);
         setStoreAccount(null);
+        setAccountMode(null);
       }
       if (bj.ok && bj.data?.results) setBilling(bj.data.results);
       else if (bj.mode === 'demo') setBilling(bj.data?.results || null);
@@ -82,7 +85,7 @@ export default function SetupView() {
     } finally {
       setAcctLoading(false);
     }
-  }, [setStoreAccount]);
+  }, [setStoreAccount, setAccountMode]);
 
   useEffect(() => { loadKeys(); loadAccount(); }, [loadKeys, loadAccount]);
 
@@ -153,7 +156,7 @@ export default function SetupView() {
         <Col xs={24} lg={10}>
           <Card
             title={<Space><KeyOutlined style={{ color: BRAND.orange }} />Initialize API Key</Space>}
-            style={{ borderColor: BRAND.border, background: `linear-gradient(145deg, ${BRAND.bgCard}, ${BRAND.bgBase})` }}
+            style={{ borderColor: BRAND.border, background: BRAND.bgCard }}
           >
             <Text type="secondary" style={{ fontSize: 13 }}>
               Grab a key from{' '}
@@ -184,7 +187,7 @@ export default function SetupView() {
               Validate & Activate
             </Button>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 16, padding: '12px 14px', border: `1px dashed ${BRAND.border}`, borderRadius: 8, background: 'rgba(244,128,93,0.04)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 16, padding: '12px 14px', border: `1px solid ${BRAND.border}`, borderRadius: 8, background: BRAND.bgHover }}>
               <div>
                 <div style={{ color: BRAND.textPrimary, fontWeight: 600, fontSize: 13 }}>Demo Mode</div>
                 <Text type="secondary" style={{ fontSize: 12 }}>Explore every module with synthetic data — zero credits burned.</Text>
@@ -208,8 +211,8 @@ export default function SetupView() {
                     key={k.id}
                     style={{
                       display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px',
-                      border: `1px dashed ${k.isDefault ? BRAND.orange : BRAND.border}`,
-                      borderRadius: 8, marginBottom: 8, background: k.isDefault ? 'rgba(244,128,93,0.06)' : 'transparent',
+                      border: `1px solid ${k.isDefault ? BRAND.orange : BRAND.border}`,
+                      borderRadius: 8, marginBottom: 8, background: k.isDefault ? 'rgba(244,128,93,0.07)' : 'transparent',
                     }}
                   >
                     <Tooltip title={k.status === 'active' ? 'Verified against get_account' : k.lastError || 'Not verified'}>
@@ -251,14 +254,21 @@ export default function SetupView() {
             ) : (
               <>
                 <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
-                  <Col xs={12} md={8}>
-                    <KpiCard title="Plan" value={Number(acct.phone_token_balance || 0)} icon={<CrownFilled />} hint={`Phone tokens · ${planName(acct.plan as string)}`} color={BRAND.orange} />
+                  <Col xs={12} md={6}>
+                    <MiniStat label="Plan">{planName(acct.plan as string)}</MiniStat>
                   </Col>
-                  <Col xs={12} md={8}>
-                    <KpiCard title="Status" value={0} icon={<CheckCircleOutlined />} hint={acct.status === 'active' ? `Active — ${String(acct.name || 'account')}` : String(acct.status || 'unknown')} color={acct.status === 'active' ? BRAND.green : BRAND.red} />
+                  <Col xs={12} md={6}>
+                    <MiniStat label="Status">
+                      <span style={{ color: acct.status === 'active' ? BRAND.green : BRAND.red }}>
+                        {acct.status === 'active' ? '● Active' : `● ${String(acct.status || 'unknown')}`}
+                      </span>
+                    </MiniStat>
                   </Col>
-                  <Col xs={12} md={8}>
-                    <KpiCard title="Token balance" value={0} icon={<ThunderboltOutlined />} hint={acct.unlimited ? 'Unlimited data (fair use)' : String(acct.token_balance ?? '—')} color={BRAND.yellow} />
+                  <Col xs={12} md={6}>
+                    <MiniStat label="Token balance">{acct.unlimited ? 'Unlimited' : String(acct.token_balance ?? '—')}</MiniStat>
+                  </Col>
+                  <Col xs={12} md={6}>
+                    <MiniStat label="Phone tokens">{Number(acct.phone_token_balance || 0).toLocaleString()}</MiniStat>
                   </Col>
                 </Row>
 
@@ -361,8 +371,8 @@ export default function SetupView() {
           ]}
         />
         <Alert
-          type="info" showIcon style={{ marginTop: 12, borderColor: BRAND.borderDashed, background: 'rgba(244,128,93,0.05)' }}
-          message={<span style={{ color: BRAND.textSecondary }}>All paid plans are unlimited-data under the Fair Use Policy. Phone tokens are an add-on: 180 tokens for $27/mo, $0.15 per carrier-verified mobile found — misses cost nothing.</span>}
+          type="info" showIcon style={{ marginTop: 12 }}
+          title={<span style={{ color: BRAND.textSecondary }}>All paid plans are unlimited-data under the Fair Use Policy. Phone tokens are an add-on: 180 tokens for $27/mo, $0.15 per carrier-verified mobile found — misses cost nothing.</span>}
         />
       </Card>
     </div>

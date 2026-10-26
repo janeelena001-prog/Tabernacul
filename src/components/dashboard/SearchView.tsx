@@ -337,14 +337,14 @@ export default function SearchView({ tool }: { tool: MoltTool }) {
           >
             {savedSearches.length === 0 && <Text type="secondary" style={{ fontSize: 12 }}>No saved searches yet — configure filters and save them for reuse.</Text>}
             {savedSearches.map((s) => (
-              <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', borderBottom: `1px dashed ${BRAND.border}` }}>
+              <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', borderBottom: `1px solid ${BRAND.border}` }}>
                 <a style={{ color: BRAND.textSecondary, fontSize: 13 }} onClick={() => loadSavedSearch(s)}>{s.name}</a>
                 <Popconfirm title="Delete saved search?" onConfirm={() => deleteSaved(s.id)} okButtonProps={{ danger: true, size: 'small' }}>
                   <Button size="small" type="text" danger>✕</Button>
                 </Popconfirm>
               </div>
             ))}
-            <Button block size="small" type="dashed" icon={<SaveOutlined />} style={{ marginTop: 10 }} onClick={() => setSaveModalOpen(true)}>
+            <Button block size="small" icon={<SaveOutlined />} style={{ marginTop: 10 }} onClick={() => setSaveModalOpen(true)}>
               Save current filters
             </Button>
           </Card>
@@ -423,7 +423,7 @@ export default function SearchView({ tool }: { tool: MoltTool }) {
               style={{ marginTop: 12 }}
               type="error"
               showIcon
-              message={`API error${result.errorCode ? `: ${result.errorCode}` : ''}`}
+              title={`API error${result.errorCode ? `: ${result.errorCode}` : ''}`}
               description={result.errorMessage}
             />
           )}

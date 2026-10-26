@@ -48,36 +48,25 @@ export function KpiCard({
       onClick={onClick}
       style={{
         borderColor: BRAND.border,
-        background: `linear-gradient(145deg, ${BRAND.bgCard} 0%, ${BRAND.bgBase} 100%)`,
+        background: BRAND.bgCard,
         cursor: onClick ? 'pointer' : 'default',
-        position: 'relative',
-        overflow: 'hidden',
       }}
-      styles={{ body: { padding: '18px 20px', position: 'relative' } }}
+      styles={{ body: { padding: '16px 18px' } }}
     >
-      <div
-        aria-hidden
-        style={{
-          position: 'absolute', top: -30, right: -30, width: 110, height: 110,
-          borderRadius: '50%', background: `radial-gradient(circle, ${color}22 0%, transparent 70%)`,
-          pointerEvents: 'none',
-        }}
-      />
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
         <span style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          width: 34, height: 34, borderRadius: 8,
-          background: `${color}18`, color, fontSize: 16,
-          border: `1px dashed ${color}55`,
+          width: 32, height: 32, borderRadius: 8,
+          background: `${color}1A`, color, fontSize: 15,
         }}>
           {icon}
         </span>
-        <span style={{ color: BRAND.textMuted, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>
+        <span style={{ color: BRAND.textMuted, fontSize: 12, letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600 }}>
           {title}
         </span>
       </div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-        <span style={{ fontFamily: "'Geist Mono', ui-monospace, monospace", fontSize: 27, fontWeight: 700, color: BRAND.textPrimary, lineHeight: 1.1 }}>
+        <span style={{ fontFamily: "'Geist Mono', ui-monospace, monospace", fontSize: 26, fontWeight: 700, color: BRAND.textPrimary, lineHeight: 1.1 }}>
           {display}
         </span>
         {suffix && <span style={{ color: BRAND.textMuted, fontSize: 13 }}>{suffix}</span>}
@@ -90,6 +79,23 @@ export function KpiCard({
   );
 }
 
+/** Compact label/value row for text-first stats (plan, status, balance…) */
+export function MiniStat({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div style={{
+      border: `1px solid ${BRAND.border}`, borderRadius: 8,
+      background: BRAND.bgCard, padding: '12px 14px', minWidth: 0,
+    }}>
+      <div style={{ color: BRAND.textMuted, fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600, marginBottom: 6 }}>
+        {label}
+      </div>
+      <div style={{ color: BRAND.textPrimary, fontSize: 15, fontWeight: 600, lineHeight: 1.3 }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
 export function RiskBadge({ grade }: { grade: string | null | undefined }) {
   if (!grade) return <Tag style={{ color: BRAND.textMuted, borderColor: BRAND.border }}>—</Tag>;
   const color = riskColor(grade);
@@ -99,7 +105,7 @@ export function RiskBadge({ grade }: { grade: string | null | undefined }) {
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         minWidth: 26, height: 22, padding: '0 6px', borderRadius: 5,
         fontFamily: "'Geist Mono', monospace", fontWeight: 700, fontSize: 12,
-        color, background: `${color}18`, border: `1px dashed ${color}66`,
+        color, background: `${color}1A`,
       }}>
         {grade.toUpperCase()}
       </span>
@@ -128,7 +134,7 @@ export function FairUseMeter({
           {used.toLocaleString()} / {limit.toLocaleString()}{resetStr ? ` · resets ${resetStr}` : ''}
         </span>
       </div>
-      <Progress percent={pct} showInfo={false} strokeColor={stroke} railColor="#1E2028" size={{ height: 7 }} />
+      <Progress percent={pct} showInfo={false} strokeColor={stroke} railColor="#1C1C22" size={{ height: 6 }} />
     </div>
   );
 }
@@ -155,7 +161,7 @@ export function PageHeader({
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
       <div>
-        <h1 style={{ color: BRAND.textPrimary, fontSize: 22, fontWeight: 700, margin: 0, letterSpacing: '0.01em' }}>
+        <h1 style={{ color: BRAND.textPrimary, fontSize: 21, fontWeight: 700, margin: 0, letterSpacing: '0.01em' }}>
           {title}
         </h1>
         {subtitle && <p style={{ color: BRAND.textMuted, margin: '6px 0 0', fontSize: 13, maxWidth: 720 }}>{subtitle}</p>}
@@ -165,7 +171,7 @@ export function PageHeader({
   );
 }
 
-export function dashedCardStyle(extra?: React.CSSProperties): React.CSSProperties {
+export function cardStyle(extra?: React.CSSProperties): React.CSSProperties {
   return {
     borderColor: BRAND.border,
     background: BRAND.bgCard,

@@ -41,6 +41,9 @@ interface DashState {
   account: AccountInfo | null;
   setAccount: (a: AccountInfo | null) => void;
 
+  accountMode: 'live' | 'demo' | null;
+  setAccountMode: (m: 'live' | 'demo' | null) => void;
+
   fairUse: FairUseInfo | null;
   setFairUse: (f: FairUseInfo | null) => void;
 
@@ -62,6 +65,9 @@ export const useDash = create<DashState>((set) => ({
 
   account: null,
   setAccount: (a) => set({ account: a }),
+
+  accountMode: null,
+  setAccountMode: (m) => set({ accountMode: m }),
 
   fairUse: null,
   setFairUse: (f) => set({ fairUse: f }),

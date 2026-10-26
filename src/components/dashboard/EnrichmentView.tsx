@@ -311,14 +311,14 @@ export default function EnrichmentView() {
             {gateWarning && (
               <Alert
                 type="warning" showIcon style={{ marginBottom: 12 }}
-                message={<span style={{ color: BRAND.yellow }}>Plan-gated tool</span>}
+                title={<span style={{ color: BRAND.yellow }}>Plan-gated tool</span>}
                 description={<span style={{ color: BRAND.textMuted, fontSize: 12 }}>Personal email tools require the personal-email entitlement — available on Free, Solo ($27) and Pro ($97) plans. Check Account Setup → personal_email_available.</span>}
               />
             )}
             {phoneMetered && (
               <Alert
-                type="info" showIcon style={{ marginBottom: 12, borderColor: BRAND.borderDashed }}
-                message={<span style={{ color: BRAND.textSecondary }}>Metered with phone tokens — $0.15 per number found, misses are free. Check your balance in Account Setup.</span>}
+                type="info" showIcon style={{ marginBottom: 12 }}
+                title={<span style={{ color: BRAND.textSecondary }}>Metered with phone tokens — $0.15 per number found, misses are free. Check your balance in Account Setup.</span>}
               />
             )}
 

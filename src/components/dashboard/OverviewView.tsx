@@ -110,8 +110,8 @@ export default function OverviewView() {
               <KpiCard title="Calls (24h)" value={stats?.last24h || 0} icon={<ApiOutlined />} hint={`${fmt(stats?.total || 0)} all time`} onClick={() => setView('monitoring')} />
             </Col>
             <Col xs={12} md={8} xl={4}>
-              <KpiCard title="Success rate" value={0} precision={0} icon={<CheckCircleOutlined />} color={BRAND.green}
-                hint={stats ? `${stats.successRate}% hit-or-miss` : ''}
+              <KpiCard title="Success rate" value={stats?.successRate || 0} suffix="%" precision={1} icon={<CheckCircleOutlined />} color={BRAND.green}
+                hint={stats ? `${fmt(stats.okCount)} with data · ${fmt(stats.notFoundCount)} miss` : ''}
                 delta={stats && stats.successRate >= 95 ? 'healthy' : undefined}
                 onClick={() => setView('monitoring')} />
             </Col>
@@ -122,7 +122,7 @@ export default function OverviewView() {
               <KpiCard title="Records found" value={stats?.totalRecords || 0} icon={<DatabaseOutlined />} color={BRAND.green} hint="all local calls" onClick={() => setView('collections')} />
             </Col>
             <Col xs={12} md={8} xl={4}>
-              <KpiCard title="Usage {period}" value={totals?.calls || 0} icon={<BellOutlined />} color={BRAND.orange}
+              <KpiCard title={`Usage · ${period}`} value={totals?.calls || 0} icon={<BellOutlined />} color={BRAND.orange}
                 hint={totals ? `${fmt(totals.with_data)} with data · ${fmt(totals.failed)} failed` : 'no usage data yet'} />
             </Col>
             <Col xs={12} md={8} xl={4}>
